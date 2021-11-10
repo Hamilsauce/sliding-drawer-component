@@ -12,8 +12,6 @@ const expandMenu = (yPos) => {
 
 
 const menu = document.querySelector('.footer-menu')
-// const header = document.querySelector('.subtitle')
-// console.log(menu);
 let startY;
 const endTouch = (e) => {
 	const swipeMin = Math.round(parseInt(getComputedStyle(menu).height.replace('px', '')) * 0.1)
@@ -24,12 +22,6 @@ const endTouch = (e) => {
 		expandMenu(finishingTouch)
 	} else if (startY > (finishingTouch + swipeMin)) {}
 
-	// menu.querySelectorAll('.die-item').forEach(die => {
-	// 	die.style.boxShadow = `0px 0px 10px 0px rgba(220, 220, 200, 0.47)`;
-	// 	shadowLength = 10;
-	// })
-	// menu.removeEventListener('touchmove', moveTouch)
-	// menu.removeEventListener('touchend', endTouch)
 }
 
 let shadowLength = 10;
