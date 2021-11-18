@@ -1,58 +1,67 @@
-const footerMenu = document.querySelector('.footer-menu');
-const toggle = document.querySelector('.toggle-button');
-const svg = document.querySelector('svg');
-const app = document.querySelector('.app');
+class Drawer {
+  constructor() {
+    this.drawer = document.querySelector('#drawer');
+    this.handle = document.querySelector('.drawer-handle');
 
-const startDrag = (e) => {
-  const topBarCheck = e.path.some(el => el.id === 'menu-top-bar');
+    this.init();
+  }
 
-  if (topBarCheck) {
-    const footer = e.path.find(el => el.id === 'footer-menu');
-    const topBar = e.path.find(el => el.id === 'menu-top-bar');
-    topBar.classList.add('pressed')
+  init() {
+    this.handle.addEventListener('dblclick', this.doubleClickDrawerHandle.bind(this));
+    window.addEventListener('click', e => {
+      if (!e.target.classList.contains('drawer')) {
+        this.drawer.style.transition = '0.6s ease-in-out';
+        this.drawer.style.height = `${145}px`;
+        this.drawer.dataset.expanded = 'false';
+        setTimeout(() => this.drawer.style.transition = '', 600)
+      }
+    });
+    document.addEventListener('touchstart', this.startDrag.bind(this));
+  }
 
-    app.addEventListener('touchmove', dragMenu, true)
-    app.addEventListener('touchend', stopDrag, true)
-  } else return;
-};
+  isHandleEventSource(e) { return e.path.some(el => el.id === 'drawer-handle') }
 
-const stopDrag = (e) => {
-  e.path.find(el => el.id === 'menu-top-bar')
-    .classList.remove('pressed')
+  startDrag(e) {
+    if (this.isHandleEventSource(e)) {
+      this.handle.classList.add('pressed');
+      document.addEventListener('touchmove', this.dragDrawer.bind(this), true)
+      document.addEventListener('touchend', this.stopDrag.bind(this) , true)
+    } else return;
+  }
 
-  app.removeEventListener('touchmove', dragMenu, true)
-  app.removeEventListener('touchend', stopDrag, true)
-}
+  stopDrag(e) {
+    this.handle.classList.remove('pressed')
+    document.removeEventListener('touchmove', this.dragDrawer.bind(this), true)
+    document.removeEventListener('touchend', this.stopDrag.bind(this), true)
+  }
 
-const dragMenu = (e) => {
-  const topBar = e.path.find(el => el.id === 'menu-top-bar');
-  const footer = e.path.find(el => el.id === 'footer-menu');
-  const currentHeight = parseInt(getComputedStyle(footer).height)
-  const maxHeight = 450;
-  const appHeight = parseInt(getComputedStyle(app).height)
-  const touch = e.changedTouches[0].pageY
+  dragDrawer(e) {
+    const currentHeight = parseInt(getComputedStyle(this.drawer).height)
+    const maxHeight = 450;
+    const appHeight = parseInt(getComputedStyle(document.body).height)
+    const touch = e.changedTouches[0].pageY
 
-  if ((touch > (appHeight - 144))) return;
-  else if (touch <= (appHeight - maxHeight)) footer.style.height = `${currentHeight}px`;
-  else footer.style.height = `${(appHeight - touch)}px`;
+    if ((touch > (appHeight - 144))) return;
+    else if (touch <= (appHeight - maxHeight)) this.drawer.style.height = `${currentHeight}px`;
+    else this.drawer.style.height = `${(appHeight - touch)}px`;
+  }
 
-}
+  doubleClickDrawerHandle(e) {
+    if (this.drawer.dataset.expanded === 'true') {
+      this.drawer.style.height = `${145}px`;
+      this.drawer.dataset.expanded = 'false';
+    } else {
+      this.drawer.style.height = `${425}px`;
+      this.drawer.dataset.expanded = 'true';
+    }
+  }
 
-app.addEventListener('touchstart', startDrag);
-
-
-const doubleClickMenuBar = (e) => {
-  const topBar = e.path.find(el => el.id === 'menu-top-bar');
-  const footer = e.path.find(el => el.id === 'footer-menu');
-
-  if (footer.dataset.expanded === 'true') {
-    footer.style.height = `${145}px`;
-    footer.dataset.expanded = 'false';
-  } else {
-    footer.style.height = `${425}px`;
-    footer.dataset.expanded = 'true';
+  handleClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.drawer.dispatch(new CustomEvent('draw-clicked'))
   }
 }
 
-document.querySelector('#menu-top-bar')
-  .addEventListener('dblclick', doubleClickMenuBar);
+
+const drawer = new Drawer();
