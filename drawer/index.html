@@ -9,13 +9,13 @@
 </head>
 
 <body>
-  <div class="app">
-    <!-- <svg>
-      <line stroke-width="1px" viewBox="0 0 100 100" stroke="#000000" x1="0" y1="0" x2="100" y2="100" id="line" />
-    </svg> -->
-    <!-- <div class="button-container">
-      <button class="toggle-button" type="submit">Toggle</button>
-    </div> -->
+  <div id="app" class="app"></div>
+  <script src="script.js" type="module"></script>
+  <script type="module">
+    import {Drawer} from './script.js'
+    const drawer = new Drawer();
+  </script>
+  <template id="drawer-template">
     <div class="drawer" id="drawer">
       <div class="drawer-handle" data-expanded="false" id="drawer-handle">
         <svg height="24px" width="24px" viewBox="0 0 20 20" fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg">
@@ -38,9 +38,7 @@
         <div class="drawer-option">App</div>
       </div>
     </div>
-  </div>
-  <script src="script.js" type="text/javascript" charset="utf-8"></script>
-  <!-- <script src="swipe.js" type="text/javascript" charset="utf-8"></script> -->
+  </template>
 </body>
 
 </html>
