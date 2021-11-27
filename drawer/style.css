@@ -43,6 +43,7 @@ body {
    */
   touch-action: none;
   overflow-y: hidden;
+  /* transition: 0.1s; */
 }
 
 .drawer-handle {
