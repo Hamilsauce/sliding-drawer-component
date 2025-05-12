@@ -18,7 +18,7 @@ export class Drawer {
     this.handle.addEventListener('dblclick', this.doubleClickDrawerHandle.bind(this));
 
     this.parent.addEventListener('click', e => {
-      const pathContains = [...e.path].some(_ => _ === this.drawer)
+      const pathContains = [...e.composedPath()].some(_ => _ === this.drawer)
       if (!pathContains) {
         this.drawer.style.transition = '0.6s ease-in-out';
         this.drawer.style.height = `${136}px`;
@@ -30,7 +30,7 @@ export class Drawer {
     document.addEventListener('touchstart', this.startDrag.bind(this));
   }
 
-  isHandleEventSource(e) { return [...e.path].some(el => el === this.handle) }
+  isHandleEventSource(e) { return [...e.composedPath()].some(el => el === this.handle) }
 
   startDrag(e) {
     console.log('this.isHandleEventSource(e)', this.isHandleEventSource(e))
